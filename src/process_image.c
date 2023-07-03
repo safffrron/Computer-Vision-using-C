@@ -28,12 +28,13 @@ void set_pixel(image im, int x, int y, int c, float v)
     //checking bounds 
     if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
     {
-        return;
+        ;
     }
-    
+    else
+    {
     //setting value
     im.data[(c * im.w * im.h)+(y * im.w)+ x]=v;
-    
+    }
 }
 
 image copy_image(image im)
@@ -70,13 +71,15 @@ void shift_image(image im, int c, float v)
     // we can check the validity 
     if(c<0 || c>=im.c)
     {
-        return;
+        ;
     }
-    
+    else
+    {
     //Assuming CHW arrangement
     for(int i=0;i<((im.w)*(im.h));i++)
     {
         im.data[i+(c*((im.w)*(im.h))]+=v;
+    }
     }
 }
 
