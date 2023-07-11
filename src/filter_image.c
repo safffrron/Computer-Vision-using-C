@@ -6,15 +6,82 @@
 #include "image.h"
 #define TWOPI 6.2831853
 
+float get_pixel(image im, int x, int y, int c)
+{
+    //Using the CHW format
+    //Assuming im.h gives image height , im.w gives image width and im.c gives total channels 
+    //In this fn we only need to return the value of the pixel at column x , row y and channel c 
+    //we know that im.data stores the value
+    
+    //checking bounds 
+    if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
+    {
+        return;
+    }    
+    
+    float *value= im.data + (c * im.w * im.h)+(y * im.w)+ x;
+    return *value;
+}
+
+void set_pixel(image im, int x, int y, int c, float v)
+{
+    //So in this function we just need to set the pixel to the given value 
+    
+    //checking bounds 
+    if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
+    {
+        ;
+    }
+    else
+    {
+    //setting value
+    im.data[(c * im.w * im.h)+(y * im.w)+ x]=v;
+    }
+}
+
+
 void l1_normalize(image im)
 {
-    // TODO
+    float sum = 0;
+    for (int c = 0; c < im.c; c++) 
+    {
+        for (int h = 0; h < im.h; h++) 
+        {
+            for (int w = 0; w < im.w; w++) 
+            {
+                sum += get_pixel(im, w, h, c);
+            }
+        }
+    }
+
+    for (int c = 0; c < im.c; c++) 
+    {
+        for (int h = 0; h < im.h; h++) 
+        {
+            for (int w = 0; w < im.w; w++) 
+            {
+                float value = get_pixel(im, w, h, c) / sum;
+                set_pixel(im, w, h, c, value);
+            }
+        }
+    }
 }
 
 image make_box_filter(int w)
 {
-    // TODO
-    return make_image(1,1,1);
+    image new_image = make_image(w, w, 1);
+
+    for (int h = 0; h < w; ++h) 
+    {
+        for (int w = 0; w < w; ++w) 
+        {
+            set_pixel(new_image, w, h, 0, 1);
+        }
+    }
+
+    l1_normalize(new_image);
+
+    return new_image;
 }
 
 image convolve_image(image im, image filter, int preserve)
