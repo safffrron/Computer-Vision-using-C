@@ -86,8 +86,46 @@ image make_box_filter(int w)
 
 image convolve_image(image im, image filter, int preserve)
 {
-    // TODO
-    return make_image(1,1,1);
+    assert(filter.c == im.c || filter.c == 1);
+
+    int channels = preserve ? im.c : 1;
+    image new_image = make_image(im.w, im.h, channels);
+
+    for (int c = 0; c < channels; c++) 
+    {
+        for (int h = 0; h < im.h; h++) 
+        {
+            for (int w = 0; w < im.w; w++) 
+            {
+
+                
+                float sum = 0;
+                for (int fc = 0; fc < filter.c; fc++) 
+                {
+                    for (int fh = 0; fh < filter.h; fh++) 
+                    {
+                        for (int fw = 0; fw < filter.w; fw++) 
+                        {
+                            int im_c = preserve ? c : 0;
+                            int im_h = h + fh - filter.h / 2;
+                            int im_w = w + fw - filter.w / 2;
+                            
+                            float im_val = get_pixel(im, im_w, im_h, im_c);
+                            float filter_val = get_pixel(filter, fw, fh, fc);
+                            
+                            sum += im_val * filter_val;
+                        }
+                    }
+                }
+                
+                set_pixel(new_image, w, h, c, sum);
+
+                
+            }
+        }
+    }
+
+    return new_image;
 }
 
 image make_highpass_filter()
