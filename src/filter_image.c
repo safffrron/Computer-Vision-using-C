@@ -113,7 +113,7 @@ image convolve_image(image im, image filter, int preserve)
                             float im_val = get_pixel(im, im_w, im_h, im_c);
                             float filter_val = get_pixel(filter, fw, fh, fc);
                             
-                            sum += im_val * filter_val;
+                            sum = sum + (im_val * filter_val);
                         }
                     }
                 }
@@ -130,20 +130,59 @@ image convolve_image(image im, image filter, int preserve)
 
 image make_highpass_filter()
 {
-    // TODO
-    return make_image(1,1,1);
+    image filter = make_image(3, 3, 1);
+
+    set_pixel(filter, 0, 0, 0, 0);
+    set_pixel(filter, 1, 0, 0, -1);
+    set_pixel(filter, 2, 0, 0, 0);
+
+    set_pixel(filter, 0, 1, 0, -1);
+    set_pixel(filter, 1, 1, 0, 4);
+    set_pixel(filter, 2, 1, 0, -1);
+
+    set_pixel(filter, 0, 2, 0, 0);
+    set_pixel(filter, 1, 2, 0, -1);
+    set_pixel(filter, 2, 2, 0, 0);
+
+    return filter;
 }
 
 image make_sharpen_filter()
 {
-    // TODO
-    return make_image(1,1,1);
+    image filter = make_image(3, 3, 1);
+
+    set_pixel(filter, 0, 0, 0, 0);
+    set_pixel(filter, 1, 0, 0, -1);
+    set_pixel(filter, 2, 0, 0, 0);
+
+    set_pixel(filter, 0, 1, 0, -1);
+    set_pixel(filter, 1, 1, 0, 5);
+    set_pixel(filter, 2, 1, 0, -1);
+
+    set_pixel(filter, 0, 2, 0, 0);
+    set_pixel(filter, 1, 2, 0, -1);
+    set_pixel(filter, 2, 2, 0, 0);
+
+    return filter;
 }
 
 image make_emboss_filter()
 {
-    // TODO
-    return make_image(1,1,1);
+    image filter = make_image(3, 3, 1);
+
+    set_pixel(filter, 0, 0, 0, -2);
+    set_pixel(filter, 1, 0, 0, -1);
+    set_pixel(filter, 2, 0, 0, 0);
+
+    set_pixel(filter, 0, 1, 0, -1);
+    set_pixel(filter, 1, 1, 0, 1);
+    set_pixel(filter, 2, 1, 0, 1);
+
+    set_pixel(filter, 0, 2, 0, 0);
+    set_pixel(filter, 1, 2, 0, 1);
+    set_pixel(filter, 2, 2, 0, 2);
+
+    return filter;
 }
 
 // Question 2.2.1: Which of these filters should we use preserve when we run our convolution and which ones should we not? Why?
