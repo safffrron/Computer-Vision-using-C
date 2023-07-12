@@ -203,14 +203,46 @@ image make_gaussian_filter(float sigma)
 
 image add_image(image a, image b)
 {
-    // TODO
-    return make_image(1,1,1);
+    assert(a.w == b.w && a.h == b.h && a.c == b.c);
+
+    image new_image = make_image(a.w, a.h, a.c);
+
+    for (int c = 0; c < a.c; c++) 
+    {
+        for (int h = 0; h < a.h; h++) 
+        {
+            for (int w = 0; w < a.w; w++) 
+            {
+                float value_1 = get_pixel(a, w, h, c);
+                float value_2 = get_pixel(b, w, h, c);
+                set_pixel(new_image, w, h, c, value_1 + value_2);
+            }
+        }
+    }
+
+    return new_image;
 }
 
 image sub_image(image a, image b)
 {
-    // TODO
-    return make_image(1,1,1);
+    assert(a.w == b.w && a.h == b.h && a.c == b.c);
+
+    image new_image = make_image(a.w, a.h, a.c);
+
+    for (int c = 0; c < a.c; c++) 
+    {
+        for (int h = 0; h < a.h; h++) 
+        {
+            for (int w = 0; w < a.w; w++) 
+            {
+                float value_1 = get_pixel(a, w, h, c);
+                float value_2 = get_pixel(b, w, h, c);
+                set_pixel(new_image, w, h, c, value_1 - value_2);
+            }
+        }
+    }
+
+    return new_image;
 }
 
 image make_gx_filter()
