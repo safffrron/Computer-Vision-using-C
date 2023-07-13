@@ -197,8 +197,36 @@ image make_emboss_filter()
 
 image make_gaussian_filter(float sigma)
 {
-    // TODO
-    return make_image(1,1,1);
+    int size = (int)ceilf(6 * sigma);
+    
+    if (size % 2 == 0)
+    {
+        size++; 
+    }
+
+    image filter = make_image(size, size, 1);
+
+    float sum = 0;
+    int half = size / 2;
+    
+    for (int h = -half; h <= half; h++) 
+    {
+        for (int w = -half; w <= half; w++) 
+        {
+            float x = w;
+            float y = h;
+            
+            float value = expf(-(x * x + y * y) / (2 * sigma * sigma)) / (2 * 3.141 * sigma * sigma);
+            
+            sum += value;
+            
+            set_pixel(filter, w + half, h + half, 0, value);
+        }
+    }
+
+    l1_normalize(filter);
+
+    return filter;
 }
 
 image add_image(image a, image b)
