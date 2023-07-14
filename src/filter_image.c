@@ -386,9 +386,9 @@ image *sobel_image(image im)
     image gx = convolve_image(im, gx_filter, 0);
     image gy = convolve_image(im, gy_filter, 0);
 
-    for (int h = 0; h < im.h; ++h) 
+    for (int h = 0; h < im.h; h++) 
     {
-        for (int w = 0; w < im.w; ++w) 
+        for (int w = 0; w < im.w; w++) 
         {
             float gx_val = get_pixel(gx, w, h, 0);
             float gy_val = get_pixel(gy, w, h, 0);
