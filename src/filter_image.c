@@ -380,6 +380,41 @@ image *sobel_image(image im)
 
 image colorize_sobel(image im)
 {
-    // TODO
-    return make_image(1,1,1);
+    image *grad = sobel_image(im);
+    image magnitude = copy_image(grad[0]);
+
+    feature_normalize(magnitude); // Normalize gradient magnitude
+
+    for (int h = 0; h < im.h; ++h) 
+    {
+        for (int w = 0; w < im.w; ++w) 
+        {
+            float mag_val = get_pixel(magnitude, w, h, 0);
+            float hue = (1 - mag_val) * 240; // Map magnitude to hue range (blue to red)
+            set_pixel(magnitude, w, h, 0, hue);
+        }
+    }
+
+    hsv_to_rgb(magnitude);
+
+    image result = make_image(im.w, im.h, im.c);
+
+    for (int c = 0; c < im.c; c++)
+     {
+        for (int h = 0; h < im.h; h++) 
+        {
+            for (int w = 0; w < im.w; w++) 
+            {
+                float hue_val = get_pixel(magnitude, w, h, 0);
+                float im_val = get_pixel(im, w, h, c);
+                set_pixel(result, w, h, c, hue_val * im_val);
+            }
+        }
+    }
+
+    free_image(grad[0]);
+    free_image(grad[1]);
+    free(grad);
+
+    return result;
 }
