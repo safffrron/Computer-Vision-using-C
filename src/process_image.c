@@ -14,7 +14,7 @@ float get_pixel(image im, int x, int y, int c)
     //checking bounds 
     if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
     {
-        ;
+        return 0;
     }    
     else
     {

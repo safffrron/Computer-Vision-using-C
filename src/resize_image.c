@@ -1,38 +1,6 @@
 #include <math.h>
 #include "image.h"
 
-float get_pixel(image im, int x, int y, int c)
-{
-    //Using the CHW format
-    //Assuming im.h gives image height , im.w gives image width and im.c gives total channels 
-    //In this fn we only need to return the value of the pixel at column x , row y and channel c 
-    //we know that im.data stores the value
-    
-    //checking bounds 
-    if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
-    {
-        return;
-    }    
-    
-    float *value= im.data + (c * im.w * im.h)+(y * im.w)+ x;
-    return *value;
-}
-
-void set_pixel(image im, int x, int y, int c, float v)
-{
-    //So in this function we just need to set the pixel to the given value 
-    
-    //checking bounds 
-    if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
-    {
-        ;
-    }
-    else
-    {
-    //setting value
-    im.data[(c * im.w * im.h)+(y * im.w)+ x]=v;
-    }
-}
 
 float nn_interpolate(image im, float x, float y, int c)
 {
