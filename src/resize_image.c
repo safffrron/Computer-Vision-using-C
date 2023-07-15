@@ -101,7 +101,7 @@ image bilinear_resize(image im, int w, int h)
                 float x = (i + 0.5) * width_scale - 0.5;
                 float y = (j + 0.5) * height_scale - 0.5;
                 float value = bilinear_interpolate(im, x, y, k);
-                set_pixel(resized, i, j, k, value);
+                set_pixel(new_image, i, j, k, value);
             }
         }
     }

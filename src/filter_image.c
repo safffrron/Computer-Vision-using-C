@@ -377,8 +377,8 @@ void feature_normalize(image im)
 image *sobel_image(image im)
 {
     image *new_image = calloc(2, sizeof(image));
-    result[0] = make_image(im.w, im.h, 1); // Gradient magnitude
-    result[1] = make_image(im.w, im.h, 1); // Gradient direction
+    new_image[0] = make_image(im.w, im.h, 1); // Gradient magnitude
+    new_image[1] = make_image(im.w, im.h, 1); // Gradient direction
 
     image gx_filter = make_gx_filter();
     image gy_filter = make_gy_filter();

@@ -14,11 +14,13 @@ float get_pixel(image im, int x, int y, int c)
     //checking bounds 
     if(((x<0||x>=im.w) || (y<0||y>=im.h))|| (c<0||c>=im.c))
     {
-        return;
+        ;
     }    
-    
+    else
+    {
     float *value= im.data + (c * im.w * im.h)+(y * im.w)+ x;
     return *value;
+    }
 }
 
 void set_pixel(image im, int x, int y, int c, float v)
@@ -58,7 +60,7 @@ image rgb_to_grayscale(image im)
     
      for(int i=0;i<((im.w)*(im.h));i++)
     {
-       float luma_value= (0.299*im.data[i]) +  (0.587*im.data[i+((im.w)*(im.h))]) +. (0.114*im.data[i+2*((im.w)*(im.h))]);
+       float luma_value= (0.299*im.data[i]) +  (0.587*im.data[i+((im.w)*(im.h))]) + (0.114*im.data[i+2*((im.w)*(im.h))]);
        gray.data[i]=luma_value;       
     }
     
@@ -78,7 +80,7 @@ void shift_image(image im, int c, float v)
     //Assuming CHW arrangement
     for(int i=0;i<((im.w)*(im.h));i++)
     {
-        im.data[i+(c*((im.w)*(im.h))]+=v;
+        im.data[i+(c*((im.w)*(im.h)))]+=v;
     }
     }
 }
@@ -127,7 +129,7 @@ void rgb_to_hsv(image im)
         // First we need to extract the rgb components 
         float red= im.data[i];
         float green= im.data[i+((im.w)*(im.h))];
-        float blue= im.data[i+2*((im.w)*(im.h));
+        float blue= im.data[i+2*((im.w)*(im.h))];
                             
         // Finding the value should be easy 
         float Value=three_way_max(red,green,blue);
@@ -184,7 +186,7 @@ void rgb_to_hsv(image im)
         //setting the values
         im.data[i]=Hue;
         im.data[i+((im.w)*(im.h))]=Saturation;
-        im.data[i+2*((im.w)*(im.h))=Value;                    
+        im.data[i+2*((im.w)*(im.h))]=Value;                    
                             
                             
     }
@@ -192,70 +194,50 @@ void rgb_to_hsv(image im)
 
 void hsv_to_rgb(image im)
 {
-    // First we need to get the HSV values 
-    float h= im.data[i];
-    float s= im.data[i+((im.w)*(im.h))];
-    float v= im.data[i+2*((im.w)*(im.h));
-    
-    // As H is between 0 and 1 , We need to convert it to 0 and 360
-    h=h*360;
+    for (int h = 0; h < im.h; h++) 
+    {
+        for (int w = 0; w < im.w; w++) 
+        {
+            float h_val = get_pixel(im, w, h, 0);
+            float s_val = get_pixel(im, w, h, 1);
+            float v_val = get_pixel(im, w, h, 2);
 
-    //Conversion parameters
-    float c= v *s ;
-    float x= c * (1- abs(((h/60)%2) - 1 ));
-    float m= v- c;
-    float r, g, b;
+            float c = s_val * v_val;
+            float x = c * (1 - fabsf(fmodf(h_val / 60, 2) - 1));
+            float m = v_val - c;
 
-    if(h>=0 && h<60)
-    {
-        r=c;
-        g=x; 
-        b=0;
-    }
-    else if( h>=60 && h< 120)
-    {
-        r=x;
-        g=c; 
-        b=0;
+            float r, g, b;
+            if (h_val < 60) {
+                r = c;
+                g = x;
+                b = 0;
+            } else if (h_val < 120) {
+                r = x;
+                g = c;
+                b = 0;
+            } else if (h_val < 180) {
+                r = 0;
+                g = c;
+                b = x;
+            } else if (h_val < 240) {
+                r = 0;
+                g = x;
+                b = c;
+            } else if (h_val < 300) {
+                r = x;
+                g = 0;
+                b = c;
+            } else {
+                r = c;
+                g = 0;
+                b = x;
+            }
 
+            set_pixel(im, w, h, 0, r + m);
+            set_pixel(im, w, h, 1, g + m);
+            set_pixel(im, w, h, 2, b + m);
+        }
     }
-    else if( h>=120 && h< 180)
-    {
-        r=0;
-        g=c; 
-        b=x;
-        
-    }
-    else if( h>=180 && h< 240)
-    {
-        r=0;
-        g=x; 
-        b=c;
-        
-    }
-    else if( h>=240 && h< 300)
-    {
-        r=x;
-        g=0; 
-        b=c;
-        
-    }
-    else 
-    {
-        r=c;
-        g=0; 
-        b=x;
-        
-    }
-    r=r+m;
-    g=g+m;
-    b=b+m;
-
-
-    //setting the values
-    im.data[i]=r;
-    im.data[i+((im.w)*(im.h))]=g;
-    im.data[i+2*((im.w)*(im.h))=b;
 
 
 }
